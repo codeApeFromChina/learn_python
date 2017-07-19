@@ -18,9 +18,9 @@ def get_char(r,g,b,alpha=256):
 
 
 if __name__ == '__main__':
-    im = Image.open("tt.png")
+    im = Image.open("tt.jpg")
     im = im.resize((HEIGHT, WIDTH), Image.NEAREST)
-    im.show()
+    # im.show()
     txt = ""
     for i in range(HEIGHT):
         for j in range(WIDTH):
