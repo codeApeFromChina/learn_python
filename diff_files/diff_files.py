@@ -49,7 +49,7 @@ if __name__ == '__main__':
     d = DiffFiles()
     d.travel_multiple_path(paths)
 
-    f_out = open('file_list', 'w+')
+    f_out = open('file_list', 'w+', encoding='utf8')
     for key in sorted(d.files.keys()):
         # if len(d.files.get(key)) > 1:
             print('file: ' + key + ", path : " + str(d.files.get(key)))
