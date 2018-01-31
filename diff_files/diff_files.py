@@ -39,16 +39,19 @@ class DiffFiles(object):
                         if parent + '\\' + f not in self._files[f]:
                             self._files[f].append(parent + '\\' + f)
 
-    def travel_multiple_path(self):
-
+    def travel_multiple_path(self, file_paths):
+        for file_path in file_paths:
+            self.travel(file_path)
 
 
 if __name__ == '__main__':
-    path = "G:\\Downloads"
+    paths = ["G:\\Downloads", "F:\\ttt"]
     d = DiffFiles()
-    d.travel(path)
+    d.travel_multiple_path(paths)
 
+    f_out = open('file_list', 'w+')
     for key in sorted(d.files.keys()):
-        if len(d.files.get(key)) > 1:
+        # if len(d.files.get(key)) > 1:
             print('file: ' + key + ", path : " + str(d.files.get(key)))
-
+            f_out.write('file: ' + key + ", path : " + str(d.files.get(key)) + "\r\n")
+    f_out.close()
