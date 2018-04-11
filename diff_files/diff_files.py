@@ -45,13 +45,13 @@ class DiffFiles(object):
 
 
 if __name__ == '__main__':
-    paths = ["G:\\Downloads", "F:\\ttt"]
+    paths = ["G:\\aaaa", "F:\\aaa", "H:\\aaa","E:\\","I:\\tt",]
     d = DiffFiles()
     d.travel_multiple_path(paths)
 
     f_out = open('file_list', 'w+', encoding='utf8')
     for key in sorted(d.files.keys()):
-        # if len(d.files.get(key)) > 1:
+        if len(d.files.get(key)) > 1:
             print('file: ' + key + ", path : " + str(d.files.get(key)))
             f_out.write('file: ' + key + ", path : " + str(d.files.get(key)) + "\r\n")
     f_out.close()
