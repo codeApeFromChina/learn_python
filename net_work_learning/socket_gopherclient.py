@@ -1,6 +1,8 @@
 #coding:utf-8
 
 import sys, socket
+import BeautifulSoup
+
 
 host = sys.argv[1]
 filename = sys.argv[2]
