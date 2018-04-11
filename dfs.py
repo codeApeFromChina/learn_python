@@ -1,8 +1,8 @@
 #codding:utf-8
 import re
 
-# words = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789~!@#$%^&*()_-+=/*<>:;\'"[]{}|'
-words = 'abcde'
+words = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~!@#$%^&*()_-+=/*<>:;\'"[]{}|'
+# words = 'abcde'
 
 
 f = open("result", "a")
@@ -29,7 +29,7 @@ class DFS(object):
             r = ''
             # for i in range(self.numlen):
             #     r += str(self.result[i])
-            f.write(''.join(self.result) + '\r\n')
+            f.write(''.join(self.result) + '\n')
             print (''.join(self.result))
             return
 
@@ -41,6 +41,7 @@ class DFS(object):
                 continue
             # self.book[i] = 1
             self.dfs(s+1)
+            self.result[step] = str(step)
             # self.book[i] = 0
         return
 
@@ -48,4 +49,9 @@ class DFS(object):
 if __name__ == '__main__':
     d = DFS(8)
     d.dfs(1)
+    with open('end','w') as end:
+        end.write("cal end")
+    # f = open('result','r')
+    # s = f.readline()
+    # print('222', end='')
     # print(r.search('12234&&&'))
