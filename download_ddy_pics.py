@@ -29,21 +29,21 @@ def download_pic(pics_path, pic_name, pic_url):  # download picture
 
 def get_all_pages_url():
     page_urls = []
-    root_url = 'https://www.meitulu.com/t/beautyleg/'
+    root_url = 'https://www.meitulu.com/t/legku/'
     resp = requests.get(root_url)
     soup = BeautifulSoup(resp.text, 'html.parser')
-    page_count = int(soup.find(id='pages').contents[-3].string)  # pictures pages
+    # page_count = int(soup.find(id='pages').contents[-3].string)  # pictures pages
     for item in soup.find_all("p", class_='p_title'):
         page_url = item.contents[0]['href']  # 图片列表url
         page_urls.append(page_url)
 
-    for i in range(2, page_count + 1):
-        list_url = str(root_url).replace(".html", "") + str(i) + ".html"
-        list_resp = requests.get(list_url)
-        list_soup = BeautifulSoup(list_resp.text, 'html.parser')
-        for item in list_soup.find_all("p", class_='p_title'):
-            page_url = item.contents[0]['href']  # 图片列表url
-            page_urls.append(page_url)
+    # for i in range(2, page_count + 1):
+    #     list_url = str(root_url).replace(".html", "") + str(i) + ".html"
+    #     list_resp = requests.get(list_url)
+    #     list_soup = BeautifulSoup(list_resp.text, 'html.parser')
+    #     for item in list_soup.find_all("p", class_='p_title'):
+    #         page_url = item.contents[0]['href']  # 图片列表url
+    #         page_urls.append(page_url)
 
     return page_urls
 
@@ -53,7 +53,7 @@ def get_index():
     #     'http': 'socks5://127.0.0.1:1080',
     #     'https': 'socks5://127.0.0.1:1080'
     # }
-    root_file = 'G:/pictures/bl'
+    root_file = 'G:/pictures/legku'
     # root_url = 'https://www.meitulu.com/t/beautyleg/'
     # resp = requests.get(root_url, proxies=proxies)
     # resp = requests.get(root_url)

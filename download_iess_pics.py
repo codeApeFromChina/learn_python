@@ -29,7 +29,7 @@ def download_pic(pics_path, pic_name, pic_url):  # download picture
 
 def get_all_pages_url():
     page_urls = []
-    root_url = 'https://www.meitulu.com/t/beautyleg/'
+    root_url = 'https://www.meitulu.com/t/iess/'
     resp = requests.get(root_url)
     soup = BeautifulSoup(resp.text, 'html.parser')
     page_count = int(soup.find(id='pages').contents[-3].string)  # pictures pages
@@ -53,7 +53,7 @@ def get_index():
     #     'http': 'socks5://127.0.0.1:1080',
     #     'https': 'socks5://127.0.0.1:1080'
     # }
-    root_file = 'G:/pictures/bl'
+    root_file = 'G:/pictures/iess'
     # root_url = 'https://www.meitulu.com/t/beautyleg/'
     # resp = requests.get(root_url, proxies=proxies)
     # resp = requests.get(root_url)
