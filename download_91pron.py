@@ -16,7 +16,7 @@ headers = {
 'Accept-Encoding': 'gzip, deflate',
 'Accept-Language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7',
 'Connection': 'keep-alive',
-'Cookie': '__cfduid=d55e72dd417cd605cc8363789b52ba4d21527309897; CLIPSHARE=9nb15qhbvr6gjkj7qq0btgic17; __utma=140380155.93594660.1527309789.1527309789.1527309789.1; __utmb=140380155.0.10.1527309789; __utmc=140380155; __utmz=140380155.1527309789.1.1.utmcsr=thetend.com|utmccn=(referral)|utmcmd=referral|utmcct=/retire.php; __51cke__=; __dtsu=1EE7044502EF2F5A62150C1302F99839; language=cn_CN; 91username=xinghen1991; DUID=834bJcfiB60LX0Y7IWYlTWi5E9pIBiSHKLmmN%2Fx2jHTjC5ke; USERNAME=e21epuhDZHxiPYw3YEeb7Jce2IDrcxOnopp2Y%2BuZIjf%2FJsy1fxD0YQ; user_level=1; EMAILVERIFIED=no; level=1; __tins__3878067=%7B%22sid%22%3A%201527309788561%2C%20%22vd%22%3A%2017%2C%20%22expires%22%3A%201527311914565%7D; __51laig__=17',
+'Cookie': '__cfduid=d744583b446448904f5870494a4412d201527255224; __utmz=50351329.1527255112.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); language=cn_CN; evercookie_cache=undefined; evercookie_etag=undefined; 91username=xinghen1991; __utma=50351329.1630715392.1527255112.1527774484.1529380971.3; __utmb=50351329.0.10.1529380971; __utmc=50351329; CLIPSHARE=robo7vovoaoibob46smu156c50; __51cke__=; __dtsu=1EE7044502EF2F5A62150C1302F99839; DUID=c109uRyEcjEAAKrnCYyZ3lFxfe7fZBeJDhuknQp%2B9hnknYmn; USERNAME=6620rPLKvPliG7BggXUxjLB3OR3ZBcN2CkjttFqTrjcWwgTDBiq2SA; user_level=1; EMAILVERIFIED=no; level=1; __tins__3878067=%7B%22sid%22%3A%201529380976077%2C%20%22vd%22%3A%207%2C%20%22expires%22%3A%201529382863469%7D; __51laig__=7',
 'DNT': '1',
 'Host': '91.91p17.space',
 'Upgrade-Insecure-Requests': '1',
@@ -44,7 +44,7 @@ def query_url_list(index_url):
     return url_list
 
 def Main ():
-    index_url = 'http://91.91p17.space/search_result.php?search_id=%E4%B8%9D%E8%A2%9C&search_type=search_videos&x=50&y=10&page='
+    index_url = 'http://91porn.com/search_result.php?search_id=%E4%B8%9D%E8%A2%9C&search_type=search_videos&viewtype=basic&page='
     url_list_file = 'g:/url_lists'
     with open("list_file", 'w') as f:
         for i in range(1, int(2100/20)+1):
@@ -59,8 +59,8 @@ def Main ():
 def trans_url(ori_url):
     base_url = 'https://www.parsevideo.com/'
     trans_urls = []
-    cap = DesiredCapabilities().FIREFOX.copy()
-    cap["marionette"] = False
+    # cap = DesiredCapabilities().FIREFOX.copy()
+    # cap["marionette"] = False
     # browser = webdriver.Firefox(log_path = 'firefox.log', capabilities=cap, firefox_binary=r'D:\software\firefox\firefox.exe', executable_path="D:/develop\WinPython-64bit-3.6.3.0Qt5/python-3.6.3.amd64/Scripts/geckodriver.exe")
 
     browser = webdriver.PhantomJS()
@@ -68,10 +68,11 @@ def trans_url(ori_url):
     browser.find_element_by_id('url_input').clear()
     browser.find_element_by_id('url_input').send_keys(ori_url)
     browser.find_element_by_id('url_submit_button').click()
-    # browser.save_screenshot("before_request.png")
+    browser.save_screenshot("before_request.png")
     print(browser.find_element_by_id('url_submit_button').get_attribute('disabled'))
     try:
         WebDriverWait(browser, 5).until(EC.element_to_be_clickable((By.ID, "url_submit_button")))
+        browser.save_screenshot("after_request.png")
         elements = browser.find_elements_by_name("search")
         for item in elements:
             print(item.get_attribute("value"))
@@ -80,18 +81,58 @@ def trans_url(ori_url):
     finally:
         browser.quit()
 
+    sort_item = []
+    sort_item.append(trans_urls[1],trans_urls[3], trans_urls[5],trans_urls[0],trans_urls[4],)
 
-def download_file(file_url):
-    f_video = 'g:/91video/4.mp4'
+    return sort_item
+
+
+def download_file(file_url, file_name):
+    f_video = 'g:/91video/{0}.mp4'.format(file_name)
     # print(requests.get(file_url).content)
-    with open(f_video, 'wb') as f:
-        f.write(requests.get(file_url).content)
+    try:
+        with open(f_video, 'wb') as f:
+            f.write(requests.get(file_url).content)
 
+            return True
+    except Exception as e:
+        print("{0}, download error. error {1}".format(file_url, e))
+        error_log("download error, ", e)
+        return False
+
+
+def read_file_download():
+    try:
+        with open('list_file', 'r') as url_f:
+            file_count = 10
+            for item in url_f:
+                print(item.strip())
+                trans_urls = trans_url(item.strip())
+                count = 0
+                for trans_item in trans_urls:
+                    print('trans url {0} is : {1}'.format(count, trans_item))
+                    if download_file(trans_item, file_count):
+                        count += 1
+                        break;
+                if count < 1:
+                    error_log("download ori url {0} error".format(item), None)
+                file_count += 1
+
+    except Exception as e:
+        print("download error. error {0}".format(e))
+        error_log("read url list error", e)
+
+
+
+def error_log(msg, e):
+    with open("g:/91video/logg", 'w') as lf:
+        lf.write("error message is : {0}, error is : {1}".format(msg, e))
 
 if __name__ == '__main__':
-    trans_url("http://91porn.com/view_video.php?viewkey=816d97f0a3504ac3ed0c")
+    # trans_url("http://91porn.com/view_video.php?viewkey=eddeaeed1bffb77efdcb&page=1&viewtype=basic&category=mr")
     # Main()
-    # download_file("http://192.240.120.34//mp43/266462.mp4?st=Gz1Ej76JkDyKZYCeR1ooKQ&e=1527412384")
+    # download_file("http://g.t4k.spac//mp43/269494.mp4?st=iQpvd2xxfqQldEiVAm_pvA&e=1529454469")
+    read_file_download()
 
 
 
