@@ -1,9 +1,13 @@
 import requests
 from selenium import webdriver
+from selenium.webdriver import DesiredCapabilities
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.common.proxy import ProxyType
+from selenium.webdriver.common.proxy import Proxy
+
+import os
 
 
 proxies = {
@@ -63,7 +67,22 @@ def trans_url(ori_url):
     # cap["marionette"] = False
     # browser = webdriver.Firefox(log_path = 'firefox.log', capabilities=cap, firefox_binary=r'D:\software\firefox\firefox.exe', executable_path="D:/develop\WinPython-64bit-3.6.3.0Qt5/python-3.6.3.amd64/Scripts/geckodriver.exe")
 
-    browser = webdriver.PhantomJS()
+    proxy = Proxy(
+        {
+            'proxyType': ProxyType.MANUAL,
+            'httpProxy': "174.120.70.232:80"
+        }
+    )
+
+    desired_capabilities = DesiredCapabilities.PHANTOMJS.copy()
+    # 把代理ip加入到技能中
+    proxy.add_to_capabilities(desired_capabilities)
+    browser = webdriver.PhantomJS(
+        executable_path="D:/develop/WinPython-64bit-3.6.3.0Qt5/python-3.6.3.amd64/Scripts/phantomjs.exe",
+        desired_capabilities=desired_capabilities
+    )
+    # browser = webdriver.PhantomJS(proxy=proxy)
+
     browser.get(base_url)
     browser.find_element_by_id('url_input').clear()
     browser.find_element_by_id('url_input').send_keys(ori_url)
@@ -94,6 +113,9 @@ def trans_url(ori_url):
 def download_file(file_url, file_name):
     f_video = 'g:/91video/{0}.mp4'.format(file_name)
     # print(requests.get(file_url).content)
+    if os.path.exists(f_video):
+        print("file is downloaded, {0}".format(file_name))
+        return
     try:
         with open(f_video, 'wb') as f:
             f.write(requests.get(file_url).content)
@@ -110,14 +132,18 @@ def read_file_download():
         with open('list_file', 'r') as url_f:
             file_count = 10
             for item in url_f:
+
+                file_name =  get_file_id(item)
+
                 print(item.strip())
                 trans_urls = trans_url(item.strip())
                 count = 0
                 for trans_item in trans_urls:
                     print('trans url {0} is : {1}'.format(count, trans_item))
-                    if download_file(trans_item, file_count):
+
+                    if download_file(trans_item, file_name):
                         count += 1
-                        break;
+                        break
                 if count < 1:
                     error_log("download ori url {0} error".format(item), None)
                 file_count += 1
@@ -125,6 +151,7 @@ def read_file_download():
     except Exception as e:
         print("download error. error {0}".format(e))
         error_log("read url list error", e)
+        raise Exception(e)
 
 
 
@@ -132,11 +159,24 @@ def error_log(msg, e):
     with open("g:/91video/logg", 'w') as lf:
         lf.write("error message is : {0}, error is : {1}".format(msg, e))
 
+
+def get_file_id (item):
+    values = item.split('?')[- 1]
+    for item in values.split('&'):
+        if 'viewkey' == item.split('=')[0]:
+            print(item.split('=')[1])
+            return item.split('=')[1]
+
+
 if __name__ == '__main__':
     # trans_url("http://91porn.com/view_video.php?viewkey=eddeaeed1bffb77efdcb&page=1&viewtype=basic&category=mr")
     # Main()
     # download_file("http://g.t4k.spac//mp43/269494.mp4?st=iQpvd2xxfqQldEiVAm_pvA&e=1529454469")
     read_file_download()
+    item = 'http://91porn.com/view_video.php?viewkey=eddeaeed1bffb77efdcb&page=1&viewtype=basic&category=mr'
+    get_file_id(item)
+
+
 
 
 
