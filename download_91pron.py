@@ -82,7 +82,11 @@ def trans_url(ori_url):
         browser.quit()
 
     sort_item = []
-    sort_item.append(trans_urls[1],trans_urls[3], trans_urls[5],trans_urls[0],trans_urls[4],)
+    sort_item.append(trans_urls[1])
+    sort_item.append(trans_urls[3])
+    sort_item.append(trans_urls[5])
+    sort_item.append(trans_urls[0])
+    sort_item.append(trans_urls[4])
 
     return sort_item
 
